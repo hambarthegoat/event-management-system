@@ -45,8 +45,8 @@ bun run migrate
 ```
 
 ### Running the Project
-*   Development: `npm run dev`
-*   Production: `npm run build && npm start`
+*   Development: `bun run dev`
+*   Production: `bun run build && bun start`
 
 ## Running Tests
 Unit tests for the domain logic are implemented using Jest.
