@@ -1,5 +1,6 @@
 import { Event } from '../aggregates/Event';
 import { Booking } from '../aggregates/Booking';
+import type { Refund } from '../aggregates/Refund';
 
 export interface IEventRepository {
   findById(id: string): Promise<Event| null>;
@@ -17,4 +18,9 @@ export interface IBookingRepository {
   countActiveByCategory(categoryId: string): Promise<number>;
 
   save(booking: Booking): Promise<void>;
+}
+
+export interface IRefundRepository {
+  findById(id: string): Promise<Refund | null>;
+  save(refund: Refund): Promise<void>;
 }
