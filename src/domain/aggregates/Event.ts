@@ -1,6 +1,6 @@
 import { AggregateRoot } from "../common/AggregateRoot";
 import { Entity } from "../common/Entity";
-import { EventCancelled, EventCreated, EventPublished, TicketCategoryCreated, TicketCategoryDisabled } from "../events/Eventevents";
+import { EventCancelled, EventCreated, EventPublished, TicketCategoryCreated, TicketCategoryDisabled } from "../events/EventEvents";
 import { InvalidCapacityException, InvalidDateException, InvalidStateException } from "../exceptions/DomainExceptions";
 import { Money } from "../value-objects/Money";
 

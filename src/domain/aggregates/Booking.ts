@@ -1,6 +1,6 @@
 import { AggregateRoot } from "../common/AggregateRoot";
 import { Entity } from "../common/Entity";
-import { BookingExpired, BookingPaid, TicketCheckedIn, TicketReserved } from "../events/Bookingevents";
+import { BookingExpired, BookingPaid, TicketCheckedIn, TicketReserved } from "../events/BookingEvents";
 import {
   InvalidCapacityException,
   InvalidDateException,
