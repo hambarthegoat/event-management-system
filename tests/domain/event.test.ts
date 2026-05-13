@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'bun:test';
-import { Event, EventStatus } from '../../src/domain/aggregates/Event';
+import { Event, EventStatus, TicketCategory } from '../../src/domain/aggregates/Event';
+import { Money } from '../../src/domain/value-objects/Money';
 import { InvalidCapacityException, InvalidDateException } from '../../src/domain/exceptions/DomainExceptions';
 
 // ---- Helpers ----
@@ -20,6 +21,28 @@ function makeEvent(overrides: Partial<{
     end,
     overrides.maxCapacity ?? 100,
     'organizer-1',
+  );
+}
+
+function makeCategory(overrides: Partial<{
+  id: string;
+  quota: number;
+  price: number;
+  salesEndDate: Date;
+  eventStartDate: Date;
+}> = {}): TicketCategory {
+  const eventStart = overrides.eventStartDate ?? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+  const salesEnd = overrides.salesEndDate ?? new Date(eventStart.getTime() - 24 * 60 * 60 * 1000); // 1 day before event
+  const salesStart = new Date(salesEnd.getTime() - 3 * 24 * 60 * 60 * 1000); // 3 days before salesEnd
+  return new TicketCategory(
+    overrides.id ?? 'cat-1',
+    {
+      name: 'Regular',
+      price: Money.of(overrides.price ?? 150_000),
+      quota: overrides.quota ?? 50,
+      salesStartDate: salesStart,
+      salesEndDate: salesEnd,
+    },
   );
 }
 
@@ -54,5 +77,53 @@ describe('US-1: Create Event', () => {
   it('throws InvalidCapacityException when maxCapacity is negative', () => {
     expect(() => makeEvent({ maxCapacity: -10 }))
       .toThrow(InvalidCapacityException);
+  });
+});
+
+// ================================================================
+// US-4: Create Ticket Category
+// ================================================================
+ 
+describe('US-4: Create Ticket Category', () => {
+  it('adds a valid ticket category to the event', () => {
+    const event = makeEvent();
+    const category = makeCategory();
+    event.addTicketCategory(category);
+    expect(event.categories).toHaveLength(1);
+  });
+ 
+  it('raises TicketCategoryCreated domain event', () => {
+    const event = makeEvent();
+    event.clearEvents();
+    event.addTicketCategory(makeCategory());
+    const names = event.domainEvents.map((e) => e.constructor.name);
+    expect(names).toContain('TicketCategoryCreated');
+  });
+ 
+  it('throws InvalidCapacityException when quota is zero', () => {
+    const event = makeEvent();
+    expect(() => event.addTicketCategory(makeCategory({ quota: 0 })))
+      .toThrow(InvalidCapacityException);
+  });
+ 
+  it('throws InvalidCapacityException when quota is negative', () => {
+    const event = makeEvent();
+    expect(() => event.addTicketCategory(makeCategory({ quota: -5 })))
+      .toThrow(InvalidCapacityException);
+  });
+ 
+  it('throws InvalidCapacityException when total quota exceeds event maxCapacity', () => {
+    const event = makeEvent(); // maxCapacity: 100
+    event.addTicketCategory(makeCategory({ id: 'cat-1', quota: 60 }));
+    expect(() => event.addTicketCategory(makeCategory({ id: 'cat-2', quota: 50 }))) // 60 + 50 = 110
+      .toThrow(InvalidCapacityException);
+  });
+ 
+  it('throws InvalidDateException when salesEndDate is after event startDate', () => {
+    const eventStart = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    const event = makeEvent();
+    const salesEndAfterEvent = new Date(eventStart.getTime() + 24 * 60 * 60 * 1000); // 1 day AFTER event start
+    expect(() => event.addTicketCategory(makeCategory({ salesEndDate: salesEndAfterEvent, eventStartDate: eventStart })))
+      .toThrow(InvalidDateException);
   });
 });
