@@ -190,3 +190,39 @@ describe('US-11: Expire Booking', () => {
     expect(() => booking.expire(beforeDeadline)).toThrow(InvalidStateException);
   });
 });
+
+// ================================================================
+// REQUIRED TEST CASES
+// ================================================================
+
+describe('Required Tests — Case Study Spec', () => {
+  it('Booking cannot be created with zero quantity', () => {
+    expect(() => makeBooking({ quantity: 0 })).toThrow(InvalidQuantityException);
+  });
+
+  it('Booking cannot be paid after payment deadline', () => {
+    const booking = makeBooking();
+    const late = new Date(booking.paymentDeadline.getTime() + 1000);
+    expect(() => booking.pay(booking.totalPrice, late)).toThrow(InvalidStateException);
+  });
+
+  it('Booking cannot be paid with incorrect payment amount', () => {
+    const booking = makeBooking({ unitPrice: Money.of(100_000), quantity: 2 });
+    const incorrectAmount = Money.of(199_999);
+    const now = new Date(booking.paymentDeadline.getTime() - 1000);
+    expect(() => booking.pay(incorrectAmount, now)).toThrow(InvalidPaymentException);
+  });
+
+  it('Paid booking cannot expire', () => {
+    const booking = makePaidBooking();
+    const pastDeadline = new Date(booking.paymentDeadline.getTime() + 1000);
+    expect(() => booking.expire(pastDeadline)).toThrow(InvalidStateException);
+  });
+
+  it('Checked-in ticket cannot be checked in again', () => {
+    const booking = makePaidBooking({ quantity: 1 });
+    const ticketId = booking.tickets[0]!.id;
+    booking.checkInTicket(ticketId); // first check-in
+    expect(() => booking.checkInTicket(ticketId)).toThrow(InvalidStateException);
+  });
+});

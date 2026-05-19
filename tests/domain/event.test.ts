@@ -28,12 +28,13 @@ function makeCategory(overrides: Partial<{
   id: string;
   quota: number;
   price: number;
+  salesStartDate: Date;
   salesEndDate: Date;
   eventStartDate: Date;
 }> = {}): TicketCategory {
   const eventStart = overrides.eventStartDate ?? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
   const salesEnd = overrides.salesEndDate ?? new Date(eventStart.getTime() - 24 * 60 * 60 * 1000); // 1 day before event
-  const salesStart = new Date(salesEnd.getTime() - 3 * 24 * 60 * 60 * 1000); // 3 days before salesEnd
+  const salesStart = overrides.salesStartDate ?? new Date(salesEnd.getTime() - 3 * 24 * 60 * 60 * 1000); // 3 days before salesEnd
   return new TicketCategory(
     overrides.id ?? 'cat-1',
     {
@@ -248,5 +249,112 @@ describe('US-5: Disable Ticket Category', () => {
     expect(event.categories).toHaveLength(1);
     expect(event.categories[0]!.id).toBe('cat-1');
     expect(event.categories[0]!.isActive).toBe(false);
+  });
+});
+
+// ================================================================
+// US-6 & US-7: Event Browsing Rules
+// ================================================================
+
+describe('US-6 & US-7: Event Browsing Rules', () => {
+  it('event.isPublished() returns true only when status === Published', () => {
+    const event = makeEvent();
+    expect(event.isPublished()).toBe(false); // Draft initially
+
+    event.addTicketCategory(makeCategory());
+    event.publish();
+    expect(event.isPublished()).toBe(true);
+  });
+
+  it('event.lowestActivePrice returns the Money of the cheapest active category', () => {
+    const event = makeEvent();
+    event.addTicketCategory(makeCategory({ id: 'cat-1', price: 200_000 }));
+    event.addTicketCategory(makeCategory({ id: 'cat-2', price: 100_000, quota: 10 }));
+    
+    const lowest = event.lowestActivePrice;
+    expect(lowest?.amount).toBe(100_000);
+  });
+
+  it('event.lowestActivePrice returns null when there are no active categories', () => {
+    const event = makeEvent();
+    expect(event.lowestActivePrice).toBeNull();
+
+    event.addTicketCategory(makeCategory({ id: 'cat-1' }));
+    event.disableTicketCategory('cat-1');
+    expect(event.lowestActivePrice).toBeNull();
+  });
+
+  it('event.findCategory(categoryId) returns the correct TicketCategory', () => {
+    const event = makeEvent();
+    const category = makeCategory({ id: 'cat-1' });
+    event.addTicketCategory(category);
+    
+    const found = event.findCategory('cat-1');
+    expect(found?.id).toBe('cat-1');
+  });
+
+  it('TicketCategory.isSalesOpen(date) returns true only within the sales window', () => {
+    const start = new Date('2025-01-10T10:00:00Z');
+    const end = new Date('2025-01-20T10:00:00Z');
+    const category = makeCategory({ salesStartDate: start, salesEndDate: end, eventStartDate: new Date('2025-02-01T10:00:00Z') });
+    
+    const insideWindow = new Date('2025-01-15T10:00:00Z');
+    expect(category.isSalesOpen(insideWindow)).toBe(true);
+  });
+
+  it('TicketCategory.isSalesOpen(date) returns false before salesStartDate', () => {
+    const start = new Date('2025-01-10T10:00:00Z');
+    const end = new Date('2025-01-20T10:00:00Z');
+    const category = makeCategory({ salesStartDate: start, salesEndDate: end, eventStartDate: new Date('2025-02-01T10:00:00Z') });
+    
+    const beforeWindow = new Date('2025-01-09T10:00:00Z');
+    expect(category.isSalesOpen(beforeWindow)).toBe(false);
+  });
+
+  it('TicketCategory.isSalesOpen(date) returns false after salesEndDate', () => {
+    const start = new Date('2025-01-10T10:00:00Z');
+    const end = new Date('2025-01-20T10:00:00Z');
+    const category = makeCategory({ salesStartDate: start, salesEndDate: end, eventStartDate: new Date('2025-02-01T10:00:00Z') });
+    
+    const afterWindow = new Date('2025-01-21T10:00:00Z');
+    expect(category.isSalesOpen(afterWindow)).toBe(false);
+  });
+
+  it('A disabled TicketCategory is never returned as open (isSalesOpen -> false)', () => {
+    const start = new Date('2025-01-10T10:00:00Z');
+    const end = new Date('2025-01-20T10:00:00Z');
+    const category = makeCategory({ salesStartDate: start, salesEndDate: end, eventStartDate: new Date('2025-02-01T10:00:00Z') });
+    
+    category.disable();
+    const insideWindow = new Date('2025-01-15T10:00:00Z');
+    expect(category.isSalesOpen(insideWindow)).toBe(false);
+  });
+});
+
+// ================================================================
+// REQUIRED TEST CASES
+// ================================================================
+
+describe('Required Tests — Case Study Spec', () => {
+  it('Event cannot be created with invalid schedule', () => {
+    const start = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    const end = new Date(start.getTime() - 1000); // end before start
+    expect(() => makeEvent({ startDate: start, endDate: end })).toThrow(InvalidDateException);
+  });
+
+  it('Event cannot be created with zero or negative capacity', () => {
+    expect(() => makeEvent({ maxCapacity: 0 })).toThrow(InvalidCapacityException);
+    expect(() => makeEvent({ maxCapacity: -5 })).toThrow(InvalidCapacityException);
+  });
+
+  it('Event cannot be published without active ticket category', () => {
+    const event = makeEvent();
+    expect(() => event.publish()).toThrow(InvalidStateException);
+  });
+
+  it('Ticket category quota cannot exceed event capacity', () => {
+    const event = makeEvent({ maxCapacity: 100 });
+    event.addTicketCategory(makeCategory({ id: 'cat-1', quota: 60 }));
+    expect(() => event.addTicketCategory(makeCategory({ id: 'cat-2', quota: 50 }))).toThrow(InvalidCapacityException);
   });
 });
