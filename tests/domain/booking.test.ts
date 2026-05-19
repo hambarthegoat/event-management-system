@@ -156,3 +156,37 @@ describe('US-10: Pay Booking', () => {
     expect(() => booking.pay(overPayment, now)).toThrow(InvalidPaymentException);
   });
 });
+
+// ================================================================
+// US-11: Expire Booking
+// ================================================================
+
+describe('US-11: Expire Booking', () => {
+  it('A PendingPayment booking with a passed deadline -> expire() sets status to Expired', () => {
+    const booking = makeBooking();
+    const pastDeadline = new Date(booking.paymentDeadline.getTime() + 1);
+    booking.expire(pastDeadline);
+    expect(booking.status).toBe(BookingStatus.Expired);
+  });
+
+  it('expire() raises the domain event BookingExpired', () => {
+    const booking = makeBooking();
+    booking.clearEvents();
+    const pastDeadline = new Date(booking.paymentDeadline.getTime() + 1);
+    booking.expire(pastDeadline);
+    const eventNames = booking.domainEvents.map(e => e.constructor.name);
+    expect(eventNames).toContain('BookingExpired');
+  });
+
+  it('A Paid booking cannot be expired -> throws InvalidStateException', () => {
+    const booking = makePaidBooking();
+    const pastDeadline = new Date(booking.paymentDeadline.getTime() + 1);
+    expect(() => booking.expire(pastDeadline)).toThrow(InvalidStateException);
+  });
+
+  it('Calling expire() before the deadline has passed throws InvalidStateException', () => {
+    const booking = makeBooking();
+    const beforeDeadline = new Date(booking.paymentDeadline.getTime() - 60_000);
+    expect(() => booking.expire(beforeDeadline)).toThrow(InvalidStateException);
+  });
+});
