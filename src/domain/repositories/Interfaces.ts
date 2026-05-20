@@ -3,12 +3,12 @@ import { Booking } from '../aggregates/Booking';
 import type { Refund } from '../aggregates/Refund';
 
 export interface IEventRepository {
-  findById(id: string): Promise<Event| null>;
+  findById(id: string): Promise<Event | null>;
   save(event: Event): Promise<void>;
 }
 
 export interface IBookingRepository {
-  findById(id: string): Promise<Booking| null>;
+  findById(id: string): Promise<Booking | null>;
 
   findActiveByCustomerAndEvent(
     customerId: string,
