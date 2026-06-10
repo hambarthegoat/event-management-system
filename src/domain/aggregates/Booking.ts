@@ -143,6 +143,17 @@ export class Booking extends AggregateRoot<string> {
     booking.addDomainEvent(new TicketReserved(id));
     return booking;
   }
+
+  public static rehydrate(
+    id: string,
+    props: BookingProps,
+    status: BookingStatus,
+    tickets: Ticket[] = [],
+  ): Booking {
+    const booking = new Booking(id, props, status);
+    booking._tickets.push(...tickets);
+    return booking;
+  }
  
   // ---- Behaviour ----
  
