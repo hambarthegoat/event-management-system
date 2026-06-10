@@ -3,14 +3,20 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
+  "scripts": {
+    "migrate": "prisma db push",
+    "prisma:generate": "prisma generate"
+  },
   "devDependencies": {
     "@types/bun": "latest",
-    "@types/express": "^5.0.6"
+    "@types/express": "^5.0.6",
+    "prisma": "^6.8.2"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "dependencies": {
+    "@prisma/client": "^6.8.2",
     "express": "^5.2.1"
   }
 }

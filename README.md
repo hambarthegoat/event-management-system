@@ -5,7 +5,7 @@ An Event Ticketing and Booking System implemented using Clean Architecture and D
 ## Tech Stack
 *   Runtime: Bun
 *   Framework: Express.js with TypeScript
-*   Database: PostgreSQL
+*   Database: PostgreSQL (Prisma ORM)
 *   Architecture: Clean Architecture & DDD (Domain, Application, Infrastructure, Presentation)
 
 ## System Documentation
@@ -31,15 +31,11 @@ Detailed system design and contexts are separated into the following documents:
    ```
 3. Configure your PostgreSQL connection in the `.env` file:
    ```env
-   DB_HOST=localhost
-   DB_PORT=5432
-   DB_USER=postgres
-   DB_PASS=yourpassword
-   DB_NAME=event_ticketing_db
+   DATABASE_CONNECTION="postgresql://postgres@localhost:5432/event_management_system"
    ```
 
 ### Database Migration
-Run the following command to execute SQL migrations and set up the schema:
+Run the following command to apply the Prisma schema to your database:
 ```bash
 bun run migrate
 ```

@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_CONNECTION")
+}
+
+enum EventStatus {
+  Draft
+  Published
+  Cancelled
+  Completed
+}
+
+enum TicketCategoryStatus {
+  active
+  disabled
+}
+
+enum BookingStatus {
+  PendingPayment
+  Paid
+  Expired
+  Refunded
+}
+
+enum TicketStatus {
+  active
+  CheckedIn
+  CheckedOut
+  Cancelled
+}
+
+enum RefundStatus {
+  Requested
+  Approved
+  Rejected
+  PaidOut
+}
+
+model Event {
+  id          String         @id
+  name        String
+  description String
+  location    String
+  startDate   DateTime
+  endDate     DateTime
+  maxCapacity Int
+  organizerId String
+  status      EventStatus
+
+  categories  TicketCategory[]
+  bookings    Booking[]
+}
+
+model TicketCategory {
+  id             String              @id
+  eventId        String
+  name           String
+  priceAmount    Int
+  priceCurrency  String
+  quota          Int
+  salesStartDate DateTime
+  salesEndDate   DateTime
+  status         TicketCategoryStatus
+
+  event          Event               @relation(fields: [eventId], references: [id])
+  bookings       Booking[]
+}
+
+model Booking {
+  id               String        @id
+  eventId          String
+  customerId       String
+  categoryId       String
+  quantity         Int
+  unitPriceAmount  Int
+  unitPriceCurrency String
+  paymentDeadline  DateTime
+  status           BookingStatus
+
+  event            Event         @relation(fields: [eventId], references: [id])
+  category         TicketCategory @relation(fields: [categoryId], references: [id])
+  tickets          Ticket[]
+  refund           Refund?
+}
+
+model Ticket {
+  id        String       @id
+  bookingId String
+  eventId   String
+  code      String
+  status    TicketStatus
+
+  booking   Booking      @relation(fields: [bookingId], references: [id])
+}
+
+model Refund {
+  id               String       @id
+  bookingId        String       @unique
+  amountAmount     Int
+  amountCurrency   String
+  status           RefundStatus
+  rejectionReason  String?
+  paymentReference String?
+
+  booking          Booking      @relation(fields: [bookingId], references: [id])
+}
