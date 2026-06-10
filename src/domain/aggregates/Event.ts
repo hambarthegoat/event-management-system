@@ -116,8 +116,19 @@ export class Event extends AggregateRoot<string> {
       maxCapacity,
       organizerId,
     });
- 
+
     event.addDomainEvent(new EventCreated(id));
+    return event;
+  }
+
+  public static rehydrate(
+    id: string,
+    props: EventProps,
+    status: EventStatus,
+    categories: TicketCategory[],
+  ): Event {
+    const event = new Event(id, props, status);
+    event._categories.push(...categories);
     return event;
   }
  
