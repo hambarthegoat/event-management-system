@@ -52,6 +52,20 @@ export class Refund extends AggregateRoot<string> {
     return refund;
   }
 
+  public static rehydrate(
+    id: string,
+    bookingId: string,
+    amount: Money,
+    status: RefundStatus,
+    rejectionReason?: string,
+    paymentReference?: string,
+  ): Refund {
+    const refund = new Refund(id, bookingId, amount, status);
+    refund._rejectionReason = rejectionReason;
+    refund._paymentReference = paymentReference;
+    return refund;
+  }
+
   // ---- Behaviour ----
 
   /**
