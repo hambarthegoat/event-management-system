@@ -5,7 +5,11 @@
   "private": true,
   "scripts": {
     "migrate": "prisma db push",
-    "prisma:generate": "prisma generate"
+    "prisma:generate": "prisma generate",
+    "dev": "bun run --watch src/main.ts",
+    "build": "bun build src/main.ts --outdir dist --target bun",
+    "start": "bun run dist/main.js",
+    "test": "bun test"
   },
   "devDependencies": {
     "@types/bun": "latest",
