@@ -1,5 +1,6 @@
 import express, { Router } from 'express';
 import { createEventRouter } from './EventRoutes';
+import { createBookingRouter } from './BookingRoutes';
 
 export const createRootRouter = (container: any): Router => {
   const router = express.Router();
@@ -9,6 +10,7 @@ export const createRootRouter = (container: any): Router => {
   });
 
   router.use('/events', createEventRouter(container));
+  router.use('/bookings', createBookingRouter(container));
 
   // Feature routers will be mounted here in later commits
 
