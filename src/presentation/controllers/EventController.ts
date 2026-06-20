@@ -3,12 +3,15 @@ import type {
   CreateEventRequestDTO,
   CreateTicketCategoryRequestDTO,
   EventDTO,
+  GetPublishedEventsRequestDTO,
 } from '../../application/dtos';
 import type { CreateEventCommandHandler } from '../../application/commands/event/CreateEventCommand';
 import type { PublishEventCommandHandler } from '../../application/commands/event/PublishEventCommand';
 import type { CancelEventCommandHandler } from '../../application/commands/event/CancelEventCommand';
 import type { CreateTicketCategoryCommandHandler } from '../../application/commands/event/CreateTicketCategoryCommand';
 import type { DisableTicketCategoryCommandHandler } from '../../application/commands/event/DisableTicketCategoryCommand';
+import type { GetPublishedEventsQuery } from '../../application/queries/event/GetPublishedEventsQuery';
+import type { GetEventDetailQuery } from '../../application/queries/event/GetEventDetailQuery';
 
 export class EventController {
   constructor(
@@ -17,6 +20,8 @@ export class EventController {
     private readonly cancelEventCommand: CancelEventCommandHandler,
     private readonly createTicketCategoryCommand: CreateTicketCategoryCommandHandler,
     private readonly disableTicketCategoryCommand: DisableTicketCategoryCommandHandler,
+    private readonly getPublishedEventsQuery: GetPublishedEventsQuery,
+    private readonly getEventDetailQuery: GetEventDetailQuery,
   ) {}
 
   public createEvent = async (req: Request, res: Response): Promise<void> => {
@@ -68,6 +73,27 @@ export class EventController {
     const event = await this.disableTicketCategoryCommand.execute({
       eventId: String(req.params.eventId),
       categoryId: String(req.params.categoryId),
+    });
+
+    res.status(200).json(event);
+  };
+
+  public listPublishedEvents = async (req: Request, res: Response): Promise<void> => {
+    const location = typeof req.query.location === 'string' ? req.query.location : undefined;
+    const date = typeof req.query.date === 'string' ? req.query.date : undefined;
+
+    const query: GetPublishedEventsRequestDTO = {};
+    if (location) query.location = location;
+    if (date) query.date = date;
+
+    const events = await this.getPublishedEventsQuery.execute(query);
+    res.status(200).json(events);
+  };
+
+  // TODO(application-layer): compute Coming Soon / Sales Closed / Sold Out display status per US-7 AC
+  public getEventDetail = async (req: Request, res: Response): Promise<void> => {
+    const event = await this.getEventDetailQuery.execute({
+      eventId: String(req.params.eventId),
     });
 
     res.status(200).json(event);

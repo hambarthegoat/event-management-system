@@ -10,6 +10,8 @@ export const createEventRouter = (container: any): Router => {
     container.cancelEventCommand,
     container.createTicketCategoryCommand,
     container.disableTicketCategoryCommand,
+    container.getPublishedEventsQuery,
+    container.getEventDetailQuery,
   );
 
   router.post('/', requireRole('EventOrganizer'), controller.createEvent);
@@ -17,6 +19,8 @@ export const createEventRouter = (container: any): Router => {
   router.post('/:eventId/cancel', requireRole('EventOrganizer'), controller.cancelEvent);
   router.post('/:eventId/ticket-categories', requireRole('EventOrganizer'), controller.createTicketCategory);
   router.patch('/:eventId/ticket-categories/:categoryId/disable', requireRole('EventOrganizer'), controller.disableTicketCategory);
+  router.get('/', controller.listPublishedEvents);
+  router.get('/:eventId', controller.getEventDetail);
 
   return router;
 };
