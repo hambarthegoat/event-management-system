@@ -36,7 +36,7 @@ export class EventController {
 
   public publishEvent = async (req: Request, res: Response): Promise<void> => {
     const event = await this.publishEventCommand.execute({
-      eventId: req.params.eventId,
+      eventId: String(req.params.eventId),
     });
 
     res.status(200).json(event);
@@ -44,7 +44,7 @@ export class EventController {
 
   public cancelEvent = async (req: Request, res: Response): Promise<void> => {
     const event = await this.cancelEventCommand.execute({
-      eventId: req.params.eventId,
+      eventId: String(req.params.eventId),
     });
 
     res.status(200).json(event);
@@ -52,7 +52,7 @@ export class EventController {
 
   public createTicketCategory = async (req: Request, res: Response): Promise<void> => {
     const payload: CreateTicketCategoryRequestDTO = {
-      eventId: req.params.eventId,
+      eventId: String(req.params.eventId),
       name: req.body.name,
       price: req.body.price,
       quota: req.body.quota,
@@ -66,8 +66,8 @@ export class EventController {
 
   public disableTicketCategory = async (req: Request, res: Response): Promise<void> => {
     const event = await this.disableTicketCategoryCommand.execute({
-      eventId: req.params.eventId,
-      categoryId: req.params.categoryId,
+      eventId: String(req.params.eventId),
+      categoryId: String(req.params.categoryId),
     });
 
     res.status(200).json(event);
