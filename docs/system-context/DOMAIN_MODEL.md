@@ -38,3 +38,7 @@
 
 **E. Domain Services (`src/domain/services/`)**
 *   **`TicketAvailabilityService`:** Validates if remaining quota is sufficient for new bookings by calculating category capacity minus active booking quantities. 
+
+**F. Reporting / Participant DTO**
+*   **Participant DTO:** The application layer exposes a `EventParticipantDTO` which maps paid booking tickets to participant entries containing `customerId`, `ticketCategoryName`, `ticketCode`, and `ticketStatus`.
+*   **Reporting queries:** `GetEventParticipantsQuery` and `GetEventSalesReportQuery` are implemented in the application layer and depend on `IEventRepository` and `IBookingRepository` to compute participant lists and sales summaries.

@@ -55,6 +55,39 @@ The system may interact with:
 
 These external systems must be accessed through application service interfaces defined in the application layer. Their actual implementations must be placed in the infrastructure layer.
 
+## Implemented Status (current)
+
+- **Feature coverage:** Event lifecycle (create, publish, cancel), ticket category management (create, disable), booking flows (create, pay, expire), ticket issuance and check-in, refund lifecycle (request, approve, reject, mark paid out), and event reporting (sales report and participants list).
+- **Reporting:** `GET /events/:eventId/sales-report` and `GET /events/:eventId/participants` are implemented and wired to application query handlers.
+- **Gate officer flow:** ticket validation/check-in endpoint implemented and used by gate officers (`POST /events/:eventId/check-in`).
+- **Stubbed external services:** `DummyPaymentGateway`, `DummyRefundPaymentService`, and `ConsoleNotificationService` are used in the infrastructure for example/testing purposes.
+
+### API Endpoints (summary)
+
+- Events
+	- `GET /events` — list published events
+	- `GET /events/:eventId` — event detail
+	- `POST /events` — create event (EventOrganizer)
+	- `POST /events/:eventId/publish` — publish event (EventOrganizer)
+	- `POST /events/:eventId/cancel` — cancel event (EventOrganizer)
+	- `POST /events/:eventId/ticket-categories` — create ticket category (EventOrganizer)
+	- `PATCH /events/:eventId/ticket-categories/:categoryId/disable` — disable category (EventOrganizer)
+	- `POST /events/:eventId/check-in` — check in ticket (GateOfficer)
+	- `GET /events/:eventId/participants` — event participants (EventOrganizer)
+	- `GET /events/:eventId/sales-report` — sales report (EventOrganizer)
+
+- Bookings
+	- `POST /bookings` — create booking (Customer)
+	- `POST /bookings/:bookingId/pay` — pay booking (Customer)
+	- `POST /bookings/:bookingId/expire` — mark booking expired (System)
+	- `GET /customers/:customerId/tickets` — list customer tickets
+
+- Refunds
+	- `POST /refunds` — request refund (Customer)
+	- `POST /refunds/:refundId/approve` — approve refund (EventOrganizer)
+	- `POST /refunds/:refundId/reject` — reject refund (EventOrganizer)
+	- `POST /refunds/:refundId/payout` — mark refund paid out (Admin/System)
+
 ## 4. Required User Stories
 Students must implement the following minimum user stories.
 

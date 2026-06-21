@@ -20,3 +20,9 @@
 *   **Refund Payout:** Admins mark approved refunds as `PaidOut` and must record a payment reference
 
 ---
+
+### D. Participant List / Reporting
+
+*   **Participants source:** Participant lists and sales reports are derived from bookings stored in the `Booking` aggregate. Only bookings with status `Paid` are counted as active participants; refunded bookings are excluded from active participant lists.
+*   **Participant data:** Participant entries include `customerId`, `ticketCategoryName`, `ticketCode`, and `ticketStatus` (Active | CheckedIn | Cancelled).
+*   **Sales report calculations:** Sales report sums tickets sold per active ticket category (only `Paid` bookings), counts bookings by status (PendingPayment, Paid, Expired, Refunded), and aggregates total revenue from `Paid` bookings using the `Money` value object.
