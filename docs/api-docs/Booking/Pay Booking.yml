@@ -1,0 +1,100 @@
+info:
+  name: Pay Booking
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrl}}/bookings/{{bookingId}}/pay"
+  headers:
+    - name: x-actor-id
+      value: customer-2
+    - name: x-actor-role
+      value: Customer
+  body:
+    type: json
+    data: |-
+      {
+        "amount": { "amount": 50000, "currency": "IDR" }
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: eventId
+      value: 3d1eb79c-01e1-43bb-9145-8bf226bb457f
+    - name: categoryId
+      value: 865fd113-856f-452c-ad95-6f5b51c179d4
+    - name: bookingId
+      value: a4acc5ab-05ba-499b-b03f-8a8877e6246f
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: Success
+    request:
+      url: "{{baseUrl}}/bookings/{{bookingId}}/pay"
+      method: POST
+      headers:
+        - name: x-actor-id
+          value: customer-1
+        - name: x-actor-role
+          value: Customer
+      body:
+        type: json
+        data: |-
+          {
+            "amount": { "amount": 100000, "currency": "IDR" }
+          }
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: content-type
+          value: application/json; charset=utf-8
+        - name: date
+          value: Sat, 20 Jun 2026 13:59:17 GMT
+        - name: content-length
+          value: "682"
+        - name: etag
+          value: W/"2aa-LAt5ykObfx839RnNAH0KqoND3BU"
+        - name: x-powered-by
+          value: Express
+      body:
+        type: json
+        data: |-
+          {
+            "id": "dac6a146-7956-4355-a37b-5e700eaf26f6",
+            "eventId": "3d1eb79c-01e1-43bb-9145-8bf226bb457f",
+            "customerId": "customer-1",
+            "categoryId": "865fd113-856f-452c-ad95-6f5b51c179d4",
+            "quantity": 2,
+            "unitPrice": {
+              "amount": 50000,
+              "currency": "IDR"
+            },
+            "totalPrice": {
+              "amount": 100000,
+              "currency": "IDR"
+            },
+            "paymentDeadline": "2026-06-20T14:09:52.910Z",
+            "status": "Paid",
+            "tickets": [
+              {
+                "id": "dac6a146-7956-4355-a37b-5e700eaf26f6-tkt-1",
+                "eventId": "3d1eb79c-01e1-43bb-9145-8bf226bb457f",
+                "code": "fe93bc49-105b-4181-8611-3f29556cdb3e",
+                "status": "active"
+              },
+              {
+                "id": "dac6a146-7956-4355-a37b-5e700eaf26f6-tkt-2",
+                "eventId": "3d1eb79c-01e1-43bb-9145-8bf226bb457f",
+                "code": "6b8cc37d-9d89-4492-bda2-03841dea116b",
+                "status": "active"
+              }
+            ]
+          }

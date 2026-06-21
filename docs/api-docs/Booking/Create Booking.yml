@@ -1,0 +1,91 @@
+info:
+  name: Create Booking
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{baseUrl}}/bookings"
+  headers:
+    - name: x-actor-id
+      value: customer-1
+    - name: x-actor-role
+      value: Customer
+  body:
+    type: json
+    data: |-
+      {
+        "eventId": "{{eventId}}",
+        "customerId": "customer-2",
+        "categoryId": "{{categoryId}}",
+        "quantity": 1
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: eventId
+      value: bd8708b9-015d-40e4-bc6d-6cbdcbc09c2b
+    - name: categoryId
+      value: 04c8415e-52fd-493c-a91c-baf65fd67e66
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: Success
+    request:
+      url: "{{baseUrl}}/bookings"
+      method: POST
+      headers:
+        - name: x-actor-id
+          value: customer-1
+        - name: x-actor-role
+          value: Customer
+      body:
+        type: json
+        data: |-
+          {
+            "eventId": "{{eventId}}",
+            "customerId": "customer-1",
+            "categoryId": "{{categoryId}}",
+            "quantity": 2
+          }
+    response:
+      status: 201
+      statusText: Created
+      headers:
+        - name: content-type
+          value: application/json; charset=utf-8
+        - name: date
+          value: Sat, 20 Jun 2026 13:54:51 GMT
+        - name: content-length
+          value: "363"
+        - name: etag
+          value: W/"16b-F97HzTDaowypztJ5XrN4dErWfYw"
+        - name: x-powered-by
+          value: Express
+      body:
+        type: json
+        data: |-
+          {
+            "id": "dac6a146-7956-4355-a37b-5e700eaf26f6",
+            "eventId": "3d1eb79c-01e1-43bb-9145-8bf226bb457f",
+            "customerId": "customer-1",
+            "categoryId": "865fd113-856f-452c-ad95-6f5b51c179d4",
+            "quantity": 2,
+            "unitPrice": {
+              "amount": 50000,
+              "currency": "IDR"
+            },
+            "totalPrice": {
+              "amount": 100000,
+              "currency": "IDR"
+            },
+            "paymentDeadline": "2026-06-20T14:09:52.910Z",
+            "status": "PendingPayment",
+            "tickets": []
+          }

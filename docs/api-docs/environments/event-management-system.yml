@@ -1,0 +1,4 @@
+name: event-management-system
+variables:
+  - name: baseUrl
+    value: http://localhost:3000/api

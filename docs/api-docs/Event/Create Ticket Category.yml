@@ -1,0 +1,144 @@
+info:
+  name: Create Ticket Category
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrl}}/events/{{eventId}}/ticket-categories"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Regular (Test check-in 2)",
+        "price": { "amount": 50000, "currency": "IDR" },
+        "quota": 25,
+        "salesStartDate": "2026-06-15T00:00:00.000Z",
+        "salesEndDate": "2026-06-21T23:59:59.000Z"
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: eventId
+      value: bd8708b9-015d-40e4-bc6d-6cbdcbc09c2b
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: Success
+    request:
+      url: "{{baseUrl}}/events/{{eventId}}/ticket-categories"
+      method: POST
+      body:
+        type: json
+        data: |-
+          {
+            "name": "Regular",
+            "price": { "amount": 50000, "currency": "IDR" },
+            "quota": 50,
+            "salesStartDate": "2026-07-01T00:00:00.000Z",
+            "salesEndDate": "2026-07-31T23:59:59.000Z"
+          }
+    response:
+      status: 201
+      statusText: Created
+      headers:
+        - name: content-type
+          value: application/json; charset=utf-8
+        - name: date
+          value: Sat, 20 Jun 2026 11:44:06 GMT
+        - name: content-length
+          value: "498"
+        - name: etag
+          value: W/"1f2-OFM6aHa2ErqjQqnOptQd/5BZt+o"
+        - name: x-powered-by
+          value: Express
+      body:
+        type: json
+        data: |-
+          {
+            "id": "3d1eb79c-01e1-43bb-9145-8bf226bb457f",
+            "name": "Test Event senang-senang",
+            "description": "test 1",
+            "location": "Surabaya",
+            "startDate": "2026-08-01T09:00:00.000Z",
+            "endDate": "2026-08-01T17:00:00.000Z",
+            "maxCapacity": 100,
+            "organizerId": "organizer-1",
+            "status": "Draft",
+            "categories": [
+              {
+                "id": "847b9e42-7cdd-4618-957a-562718c59c9d",
+                "name": "Regular",
+                "price": {
+                  "amount": 50000,
+                  "currency": "IDR"
+                },
+                "quota": 50,
+                "salesStartDate": "2026-07-01T00:00:00.000Z",
+                "salesEndDate": "2026-07-31T23:59:59.000Z",
+                "status": "active"
+              }
+            ]
+          }
+  - name: Test
+    request:
+      url: "{{baseUrl}}/events/{{eventId}}/ticket-categories"
+      method: POST
+      body:
+        type: json
+        data: |-
+          {
+            "name": "Regular",
+            "price": { "amount": 35000, "currency": "IDR" },
+            "quota": 75,
+            "salesStartDate": "2026-07-01T00:00:00.000Z",
+            "salesEndDate": "2026-07-31T23:59:59.000Z"
+          }
+    response:
+      status: 201
+      statusText: Created
+      headers:
+        - name: content-type
+          value: application/json; charset=utf-8
+        - name: date
+          value: Sat, 20 Jun 2026 12:03:52 GMT
+        - name: content-length
+          value: "496"
+        - name: etag
+          value: W/"1f0-kLCDusPqxttbaAUySp2aZgkU0ZM"
+        - name: x-powered-by
+          value: Express
+      body:
+        type: json
+        data: |-
+          {
+            "id": "1142ee47-616a-48a2-a819-417926c11ff8",
+            "name": "Test Event sakit-sakit",
+            "description": "test 2",
+            "location": "Surabaya",
+            "startDate": "2026-08-01T09:00:00.000Z",
+            "endDate": "2026-08-01T17:00:00.000Z",
+            "maxCapacity": 200,
+            "organizerId": "organizer-1",
+            "status": "Draft",
+            "categories": [
+              {
+                "id": "b94bed3c-5631-4421-9c87-7a84cecf66ec",
+                "name": "Regular",
+                "price": {
+                  "amount": 35000,
+                  "currency": "IDR"
+                },
+                "quota": 75,
+                "salesStartDate": "2026-07-01T00:00:00.000Z",
+                "salesEndDate": "2026-07-31T23:59:59.000Z",
+                "status": "active"
+              }
+            ]
+          }

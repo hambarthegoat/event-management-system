@@ -1,0 +1,62 @@
+info:
+  name: Create Refund
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{baseUrl}}/bookings/{{paidBookingId}}/refund-requests"
+  headers:
+    - name: x-actor-id
+      value: customer-2
+    - name: x-actor-role
+      value: Customer
+  auth: inherit
+
+runtime:
+  variables:
+    - name: paidBookingId
+      value: dac6a146-7956-4355-a37b-5e700eaf26f6
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: Success
+    request:
+      url: "{{baseUrl}}/bookings/{{paidBookingId}}/refund-requests"
+      method: POST
+      headers:
+        - name: x-actor-id
+          value: customer-2
+        - name: x-actor-role
+          value: Customer
+    response:
+      status: 201
+      statusText: Created
+      headers:
+        - name: content-type
+          value: application/json; charset=utf-8
+        - name: date
+          value: Sun, 21 Jun 2026 10:15:46 GMT
+        - name: content-length
+          value: "160"
+        - name: etag
+          value: W/"a0-I0NwuitmwByTJodgTlTIaQzN/+o"
+        - name: x-powered-by
+          value: Express
+      body:
+        type: json
+        data: |-
+          {
+            "id": "39aef921-4954-420d-9f99-18daf4ad174f",
+            "bookingId": "3328e918-94c9-4774-a2b3-e325e34f74db",
+            "amount": {
+              "amount": 50000,
+              "currency": "IDR"
+            },
+            "status": "Requested"
+          }

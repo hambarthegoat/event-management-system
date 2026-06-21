@@ -1,0 +1,119 @@
+info:
+  name: Create Event
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{baseUrl}}/events"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Test Event sakit-sakit",
+        "description": "test 2",
+        "location": "Surabaya",
+        "startDate": "2026-08-01T09:00:00.000Z",
+        "endDate": "2026-08-01T17:00:00.000Z",
+        "maxCapacity": 200,
+        "organizerId": "organizer-1"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: Success
+    request:
+      url: "{{baseUrl}}/events"
+      method: POST
+      body:
+        type: json
+        data: |-
+          {
+            "name": "Test Event senang-senang",
+            "description": "test 1",
+            "location": "Surabaya",
+            "startDate": "2026-08-01T09:00:00.000Z",
+            "endDate": "2026-08-01T17:00:00.000Z",
+            "maxCapacity": 100,
+            "organizerId": "organizer-1"
+          }
+    response:
+      status: 201
+      statusText: Created
+      headers:
+        - name: content-type
+          value: application/json; charset=utf-8
+        - name: date
+          value: Sat, 20 Jun 2026 11:42:09 GMT
+        - name: content-length
+          value: "279"
+        - name: etag
+          value: W/"117-t6WIp28a/Y3/r+3LI17ClBFhiO0"
+        - name: x-powered-by
+          value: Express
+      body:
+        type: json
+        data: |-
+          {
+            "id": "3d1eb79c-01e1-43bb-9145-8bf226bb457f",
+            "name": "Test Event senang-senang",
+            "description": "test 1",
+            "location": "Surabaya",
+            "startDate": "2026-08-01T09:00:00.000Z",
+            "endDate": "2026-08-01T17:00:00.000Z",
+            "maxCapacity": 100,
+            "organizerId": "organizer-1",
+            "status": "Draft",
+            "categories": []
+          }
+  - name: Test
+    request:
+      url: "{{baseUrl}}/events"
+      method: POST
+      body:
+        type: json
+        data: |-
+          {
+            "name": "Test Event sakit-sakit",
+            "description": "test 2",
+            "location": "Surabaya",
+            "startDate": "2026-08-01T09:00:00.000Z",
+            "endDate": "2026-08-01T17:00:00.000Z",
+            "maxCapacity": 200,
+            "organizerId": "organizer-1"
+          }
+    response:
+      status: 201
+      statusText: Created
+      headers:
+        - name: content-type
+          value: application/json; charset=utf-8
+        - name: date
+          value: Sat, 20 Jun 2026 12:01:29 GMT
+        - name: content-length
+          value: "277"
+        - name: etag
+          value: W/"115-yDI+XFD3oZGNSAxLGJFbJbevkHc"
+        - name: x-powered-by
+          value: Express
+      body:
+        type: json
+        data: |-
+          {
+            "id": "1142ee47-616a-48a2-a819-417926c11ff8",
+            "name": "Test Event sakit-sakit",
+            "description": "test 2",
+            "location": "Surabaya",
+            "startDate": "2026-08-01T09:00:00.000Z",
+            "endDate": "2026-08-01T17:00:00.000Z",
+            "maxCapacity": 200,
+            "organizerId": "organizer-1",
+            "status": "Draft",
+            "categories": []
+          }

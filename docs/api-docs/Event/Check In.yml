@@ -1,0 +1,31 @@
+info:
+  name: Check In
+  type: http
+  seq: 8
+
+http:
+  method: POST
+  url: "{{baseUrl}}/events/{{eventId}}/check-in"
+  headers:
+    - name: x-actor-id
+      value: gate-1
+    - name: x-actor-role
+      value: GateOfficer
+  body:
+    type: json
+    data: |-
+      {
+        "ticketCode": "e3ae18c3-cac9-4245-a868-db940222b503"
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: eventId
+      value: bd8708b9-015d-40e4-bc6d-6cbdcbc09c2b
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

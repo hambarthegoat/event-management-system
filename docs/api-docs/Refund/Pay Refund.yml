@@ -1,0 +1,71 @@
+info:
+  name: Pay Refund
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{baseUrl}}/refunds/{{refundId}}/payout"
+  headers:
+    - name: x-actor-id
+      value: admin-1
+    - name: x-actor-role
+      value: Admin
+  body:
+    type: json
+    data: '{ "paymentReference": "TRX-20260620-001 (contoh)" }'
+  auth: inherit
+
+runtime:
+  variables:
+    - name: paidBookingId
+      value: 3328e918-94c9-4774-a2b3-e325e34f74db
+    - name: refundId
+      value: 39aef921-4954-420d-9f99-18daf4ad174f
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: Success
+    request:
+      url: "{{baseUrl}}/refunds/{{refundId}}/payout"
+      method: POST
+      headers:
+        - name: x-actor-id
+          value: admin-1
+        - name: x-actor-role
+          value: Admin
+      body:
+        type: json
+        data: '{ "paymentReference": "TRX-20260620-001 (contoh)" }'
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: content-type
+          value: application/json; charset=utf-8
+        - name: date
+          value: Sun, 21 Jun 2026 10:32:53 GMT
+        - name: content-length
+          value: "205"
+        - name: etag
+          value: W/"cd-D+ax636/g0wiyHy1tp9uxo2PbDk"
+        - name: x-powered-by
+          value: Express
+      body:
+        type: json
+        data: |-
+          {
+            "id": "39aef921-4954-420d-9f99-18daf4ad174f",
+            "bookingId": "3328e918-94c9-4774-a2b3-e325e34f74db",
+            "amount": {
+              "amount": 50000,
+              "currency": "IDR"
+            },
+            "status": "PaidOut",
+            "paymentReference": "TRX-20260620-001 (contoh)"
+          }

@@ -1,0 +1,74 @@
+info:
+  name: Publish Event
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{baseUrl}}/events/{{eventId}}/publish"
+  body:
+    type: json
+    data: ""
+  auth: inherit
+
+runtime:
+  variables:
+    - name: eventId
+      value: bd8708b9-015d-40e4-bc6d-6cbdcbc09c2b
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: Success
+    request:
+      url: "{{baseUrl}}/events/{{eventId}}/publish"
+      method: POST
+      body:
+        type: json
+        data: ""
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: content-type
+          value: application/json; charset=utf-8
+        - name: date
+          value: Sat, 20 Jun 2026 11:53:03 GMT
+        - name: content-length
+          value: "502"
+        - name: etag
+          value: W/"1f6-RYOwMJda6dBZ4KeBnC1yPCExrjM"
+        - name: x-powered-by
+          value: Express
+      body:
+        type: json
+        data: |-
+          {
+            "id": "3d1eb79c-01e1-43bb-9145-8bf226bb457f",
+            "name": "Test Event senang-senang",
+            "description": "test 1",
+            "location": "Surabaya",
+            "startDate": "2026-08-01T09:00:00.000Z",
+            "endDate": "2026-08-01T17:00:00.000Z",
+            "maxCapacity": 100,
+            "organizerId": "organizer-1",
+            "status": "Published",
+            "categories": [
+              {
+                "id": "847b9e42-7cdd-4618-957a-562718c59c9d",
+                "name": "Regular",
+                "price": {
+                  "amount": 50000,
+                  "currency": "IDR"
+                },
+                "quota": 50,
+                "salesStartDate": "2026-07-01T00:00:00.000Z",
+                "salesEndDate": "2026-07-31T23:59:59.000Z",
+                "status": "active"
+              }
+            ]
+          }
