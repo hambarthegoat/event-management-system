@@ -13,6 +13,8 @@ export const createEventRouter = (container: any): Router => {
     container.disableTicketCategoryCommand,
     container.getPublishedEventsQuery,
     container.getEventDetailQuery,
+    container.getEventParticipantsQuery,
+    container.getEventSalesReportQuery,
   );
   const bookingController = new BookingController(container);
 
@@ -23,6 +25,8 @@ export const createEventRouter = (container: any): Router => {
   router.patch('/:eventId/ticket-categories/:categoryId/disable', requireRole('EventOrganizer'), controller.disableTicketCategory);
   router.post('/:eventId/check-in', requireRole('GateOfficer'), bookingController.checkInTicket);
   router.get('/', controller.listPublishedEvents);
+  router.get('/:eventId/participants', requireRole('EventOrganizer'), controller.getEventParticipants);
+  router.get('/:eventId/sales-report', requireRole('EventOrganizer'), controller.getEventSalesReport);
   router.get('/:eventId', controller.getEventDetail);
 
   return router;

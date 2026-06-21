@@ -4,6 +4,8 @@ import type {
   CreateTicketCategoryRequestDTO,
   EventDTO,
   GetPublishedEventsRequestDTO,
+  GetEventParticipantsRequestDTO,
+  GetEventSalesReportRequestDTO,
 } from '../../application/dtos';
 import type { CreateEventCommandHandler } from '../../application/commands/event/CreateEventCommand';
 import type { PublishEventCommandHandler } from '../../application/commands/event/PublishEventCommand';
@@ -12,6 +14,8 @@ import type { CreateTicketCategoryCommandHandler } from '../../application/comma
 import type { DisableTicketCategoryCommandHandler } from '../../application/commands/event/DisableTicketCategoryCommand';
 import type { GetPublishedEventsQuery } from '../../application/queries/event/GetPublishedEventsQuery';
 import type { GetEventDetailQuery } from '../../application/queries/event/GetEventDetailQuery';
+import type { GetEventParticipantsQuery } from '../../application/queries/event/GetEventParticipantsQuery';
+import type { GetEventSalesReportQuery } from '../../application/queries/event/GetEventSalesReportQuery';
 
 export class EventController {
   constructor(
@@ -22,6 +26,8 @@ export class EventController {
     private readonly disableTicketCategoryCommand: DisableTicketCategoryCommandHandler,
     private readonly getPublishedEventsQuery: GetPublishedEventsQuery,
     private readonly getEventDetailQuery: GetEventDetailQuery,
+    private readonly getEventParticipantsQuery: GetEventParticipantsQuery,
+    private readonly getEventSalesReportQuery: GetEventSalesReportQuery,
   ) {}
 
   public createEvent = async (req: Request, res: Response): Promise<void> => {
@@ -97,5 +103,21 @@ export class EventController {
     });
 
     res.status(200).json(event);
+  };
+
+  public getEventParticipants = async (req: Request, res: Response): Promise<void> => {
+    const participants = await this.getEventParticipantsQuery.execute({
+      eventId: String(req.params.eventId),
+    });
+
+    res.status(200).json(participants);
+  };
+
+  public getEventSalesReport = async (req: Request, res: Response): Promise<void> => {
+    const report = await this.getEventSalesReportQuery.execute({
+      eventId: String(req.params.eventId),
+    });
+
+    res.status(200).json(report);
   };
 }

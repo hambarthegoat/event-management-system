@@ -45,7 +45,7 @@ bun run migrate
 *   Production: `bun run build && bun start`
 
 ## Running Tests
-Unit tests for the domain logic are implemented using Jest.
+Unit tests are implemented using Bun's test runner.
 ```bash
 bun test
 ```
@@ -60,7 +60,7 @@ bun test
 - [ ] Pay Booking, Expire Booking
 - [ ] View Purchased Tickets, Check In Ticket, Reject Invalid Ticket Check-in
 - [ ] Request Refund, Approve Refund, Reject Refund, Mark Refund as Paid Out
-- [ ] View Event Sales Report, View Event Participants
+- [x] View Event Sales Report, View Event Participants
 
 ### Domain Events
 - [ ] EventCreated, EventPublished, EventCancelled
