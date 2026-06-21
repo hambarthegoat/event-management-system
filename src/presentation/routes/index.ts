@@ -1,6 +1,7 @@
 import express, { Router } from 'express';
 import { createEventRouter } from './EventRoutes';
 import { createBookingRouter } from './BookingRoutes';
+import { createRefundRouter } from './RefundRoutes';
 import { BookingController } from '../controllers/BookingController';
 
 export const createRootRouter = (container: any): Router => {
@@ -14,6 +15,7 @@ export const createRootRouter = (container: any): Router => {
   router.get('/customers/:customerId/tickets', bookingController.getCustomerTickets);
   router.use('/events', createEventRouter(container));
   router.use('/bookings', createBookingRouter(container));
+  router.use('/refunds', createRefundRouter(container));
 
   // Feature routers will be mounted here in later commits
 
