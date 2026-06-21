@@ -13,6 +13,7 @@ Detailed system design and contexts are separated into the following documents:
 *   [Business Rules](docs/system-context/BUSINESS_RULES.md)
 *   [Domain Model](docs/system-context/DOMAIN_MODEL.md)
 *   [Ubiquitous Language](docs/system-context/UBIQUITOUS_LANGUAGE.md)
+*   [API Documentation](docs/api-docs/)
 
 ## Getting Started
 
