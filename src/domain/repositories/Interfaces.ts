@@ -31,6 +31,12 @@ export interface IBookingRepository {
   save(booking: Booking): Promise<void>;
 
   /**
+   * Finds the booking that owns a ticket with the given ticket code.
+   * Used by: US-13 Check In Ticket, US-14 Reject Invalid Ticket Check-in
+   */
+  findByTicketCode(code: string): Promise<Booking | null>;
+
+  /**
    * Returns all bookings belonging to a specific customer.
    * Used by: US-12 GetCustomerTicketsQuery
    */

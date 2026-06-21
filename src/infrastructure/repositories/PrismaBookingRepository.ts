@@ -40,6 +40,10 @@ type BookingRecord = {
   tickets: TicketRecord[];
 };
 
+type TicketWithBookingRecord = TicketRecord & {
+  booking: BookingRecord;
+};
+
 export class PrismaBookingRepository implements IBookingRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
@@ -54,6 +58,24 @@ export class PrismaBookingRepository implements IBookingRepository {
     });
     if (!record) return null;
     return toDomainBooking(record);
+  }
+
+  /**
+   * Find a Booking by ticket code.
+   * User Stories: US-13 (Check In Ticket), US-14 (Reject Invalid Ticket Check-in)
+   */
+  async findByTicketCode(code: string): Promise<Booking | null> {
+    const record = await this.prisma.ticket.findFirst({
+      where: { code },
+      include: {
+        booking: {
+          include: { tickets: true },
+        },
+      },
+    });
+
+    if (!record) return null;
+    return toDomainBooking(record.booking);
   }
 
   /**
