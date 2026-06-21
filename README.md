@@ -45,7 +45,6 @@ bun run migrate
 *   Production: `bun run build && bun start`
 
 ## Running Tests
-Unit tests are implemented using Bun's test runner.
 ```bash
 bun test
 ```
@@ -53,23 +52,23 @@ bun test
 ## Implemented Features (Case Study Requirements)
 
 ### User Stories
-- [ ] Create Event, Publish Event, Cancel Event
-- [ ] Create Ticket Category, Disable Ticket Category
-- [ ] View Available Events, View Event Details
-- [ ] Create Ticket Booking, Calculate Booking Total Price
-- [ ] Pay Booking, Expire Booking
-- [ ] View Purchased Tickets, Check In Ticket, Reject Invalid Ticket Check-in
-- [ ] Request Refund, Approve Refund, Reject Refund, Mark Refund as Paid Out
+- [x] Create Event, Publish Event, Cancel Event
+- [x] Create Ticket Category, Disable Ticket Category
+- [x] View Available Events, View Event Details
+- [x] Create Ticket Booking, Calculate Booking Total Price
+- [x] Pay Booking, Expire Booking
+- [x] View Purchased Tickets, Check In Ticket, Reject Invalid Ticket Check-in
+- [x] Request Refund, Approve Refund, Reject Refund, Mark Refund as Paid Out
 - [x] View Event Sales Report, View Event Participants
 
 ### Domain Events
-- [ ] EventCreated, EventPublished, EventCancelled
-- [ ] TicketCategoryCreated, TicketCategoryDisabled
-- [ ] TicketReserved, BookingPaid, BookingExpired, TicketCheckedIn
-- [ ] RefundRequested, RefundApproved, RefundRejected, RefundPaidOut
+- [x] EventCreated, EventPublished, EventCancelled
+- [x] TicketCategoryCreated, TicketCategoryDisabled
+- [x] TicketReserved, BookingPaid, BookingExpired, TicketCheckedIn
+- [x] RefundRequested, RefundApproved, RefundRejected, RefundPaidOut
 
 ### Application Service Interfaces
-- [ ] IPaymentGateway
-- [ ] IRefundPaymentService
-- [ ] INotificationService
+- [x] IPaymentGateway
+- [x] IRefundPaymentService
+- [x] INotificationService
 ```
